@@ -1,0 +1,10 @@
+﻿streamlit
+langchain
+langchain-core
+langchain-groq
+langchain-community
+python-dotenv
+typing-extensions
+pydantic
+groq
+
