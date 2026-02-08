@@ -78,11 +78,24 @@ if 'history' not in st.session_state:
 @st.cache_resource
 def get_llm():
     try:
-        api_key = os.getenv("GROQ_API_KEY")
+        # Try to get API key from Streamlit secrets first (for cloud deployment)
+        # Then fallback to environment variable (for local development)
+        try:
+            api_key = st.secrets["GROQ_API_KEY"]
+        except:
+            api_key = os.getenv("GROQ_API_KEY")
+        
         if not api_key or api_key == "your_groq_api_key_here":
             st.error("❌ GROQ API Key not configured!")
             st.warning("""
             **To fix this:**
+            
+            **For Streamlit Cloud:**
+            1. Go to your app settings in Streamlit Cloud
+            2. Click "Secrets" in the sidebar
+            3. Add: `GROQ_API_KEY = "your_key_here"`
+            
+            **For Local Development:**
             1. Visit https://console.groq.com/keys
             2. Sign up or log in (it's free!)
             3. Create a new API key
