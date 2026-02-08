@@ -64,7 +64,7 @@ If you want others on your local network to access:
    git commit -m "SafarSathi AI Travel Planner - Ready for deployment"
    
    # Add your GitHub repository as remote
-   git remote add origin https://github.com/YOUR_USERNAME/safarsathi.git
+   git remote add origin https://github.com/kshamadwivedi004/safarsathi-travel-planner.git
    
    # Push to GitHub
    git push -u origin main
@@ -75,7 +75,7 @@ If you want others on your local network to access:
    - Click "New app"
    - Connect your GitHub repository
    - Select:
-     - Repository: `YOUR_USERNAME/safarsathi`
+     - Repository: `kshamadwivedi004/safarsathi-travel-planner`
      - Branch: `main`
      - Main file path: `app.py`
    

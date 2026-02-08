@@ -1,5 +1,3 @@
-Deployed Link : **https://safarsathi-3f9ghvrebapp2ijthmfaxe2.streamlit.app/**
-
 # SafarSathi - AI Travel Planner
 
 SafarSathi is an AI-powered travel planning application that helps users create personalized travel itineraries. Using advanced language models, it provides detailed day-by-day plans, accommodation recommendations, food suggestions, and local tips.
@@ -18,8 +16,8 @@ SafarSathi is an AI-powered travel planning application that helps users create 
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/Rish-23072005/Safarsaathi_AI.git
-cd Safarsaathi_AI
+git clone https://github.com/kshamadwivedi004/safarsathi-travel-planner.git
+cd safarsathi-travel-planner
 ```
 
 2. Install dependencies:
