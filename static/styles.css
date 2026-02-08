@@ -616,12 +616,34 @@
     font-size: 1.15rem !important;
     transition: all 0.3s ease !important;
     color: #333 !important;
-    margin: 0.75rem 0 !important;
+    margin: 2rem 0 0.75rem 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    clear: both !important;
+    position: relative !important;
+    overflow: visible !important;
+    min-height: 3.5rem !important;
+    line-height: 1.5 !important;
 }
 
 .streamlit-expanderHeader:hover {
     background: rgba(255, 255, 255, 0.12) !important;
     transform: translateX(5px);
+}
+
+.streamlit-expanderHeader svg {
+    margin-right: 1rem !important;
+    flex-shrink: 0 !important;
+}
+
+.streamlit-expanderHeader p,
+.streamlit-expanderHeader span,
+.streamlit-expanderHeader div {
+    display: inline-block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1.5 !important;
+    vertical-align: middle !important;
 }
 
 .dark-mode .streamlit-expanderHeader {
@@ -635,9 +657,13 @@
 
 /* Expanded Content */
 .streamlit-expanderContent {
-    padding: 1.5rem !important;
+    padding: 1.5rem 1rem !important;
     border-radius: 16px;
     margin-top: 0.5rem;
+    margin-bottom: 1.5rem !important;
+    clear: both !important;
+    display: block !important;
+    position: relative !important;
 }
 
 /* ========== LABELS ========== */
