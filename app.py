@@ -75,9 +75,6 @@ if 'state' not in st.session_state:
 if 'history' not in st.session_state:
     st.session_state.history = []
 
-if 'dark_mode' not in st.session_state:
-    st.session_state.dark_mode = False
-
 @st.cache_resource
 def get_llm():
     try:
@@ -363,32 +360,10 @@ def save_to_history(state):
     st.session_state.history.append(trip_data)
 
 def main():
-    # Apply global theme class using JavaScript
-    theme_class = "dark-mode" if st.session_state.dark_mode else "light-mode"
-    st.markdown(f"""
-        <script>
-            var stApp = window.parent.document.querySelector('.stApp');
-            if (stApp) {{
-                stApp.className = stApp.className.replace(/dark-mode|light-mode/g, '');
-                stApp.classList.add('{theme_class}');
-            }}
-        </script>
-    """, unsafe_allow_html=True)
-    
-    # Dark Mode Toggle at the top
-    col1, col2 = st.columns([6, 1])
-    with col2:
-        if st.button("🌙" if not st.session_state.dark_mode else "☀️", help="Toggle Dark/Light Mode"):
-            st.session_state.dark_mode = not st.session_state.dark_mode
-            st.rerun()
-    
     # Hero Header
-    st.markdown(f"""
-        <div class="title-container">
-            <div class="title-text">✈️ SafarSathi</div>
-            <div class="subtitle-text">Your AI-Powered Travel Companion</div>
-        </div>
-    """, unsafe_allow_html=True)
+    st.title("✈️ SafarSathi")
+    st.subheader("Your AI-Powered Travel Companion")
+    st.markdown("---")
     
     # Sidebar for input
     with st.sidebar:
@@ -540,42 +515,22 @@ def main():
             daily_budget = st.session_state.state["budget_per_person"] / num_days
             
             with col1:
-                st.markdown(f"""
-                    <div class="metric-card">
-                        <div class="metric-value">{st.session_state.state.get("from_city", "N/A")} → {st.session_state.state["city"]}</div>
-                        <div class="metric-label">Journey</div>
-                    </div>
-                """, unsafe_allow_html=True)
+                st.metric("Journey", f"{st.session_state.state.get('from_city', 'N/A')} → {st.session_state.state['city']}")
             
             with col2:
-                st.markdown(f"""
-                    <div class="metric-card">
-                        <div class="metric-value">{num_days}</div>
-                        <div class="metric-label">Days</div>
-                    </div>
-                """, unsafe_allow_html=True)
+                st.metric("Days", f"{num_days}")
             
             with col3:
-                st.markdown(f"""
-                    <div class="metric-card">
-                        <div class="metric-value">{st.session_state.state["num_travelers"]}</div>
-                        <div class="metric-label">Travelers</div>
-                    </div>
-                """, unsafe_allow_html=True)
+                st.metric("Travelers", f"{st.session_state.state['num_travelers']}")
             
             with col4:
                 currency_symbol_display = st.session_state.state.get("currency_symbol", "$")
-                st.markdown(f"""
-                    <div class="metric-card">
-                        <div class="metric-value">{currency_symbol_display}{daily_budget:.0f}</div>
-                        <div class="metric-label">Per Day/Person</div>
-                    </div>
-                """, unsafe_allow_html=True)
+                st.metric("Per Day/Person", f"{currency_symbol_display}{daily_budget:.0f}")
+            
+            st.markdown("---")
             
             # Itinerary Display
-            st.markdown('<div class="itinerary-container">', unsafe_allow_html=True)
             st.markdown(st.session_state.state["itinerary"])
-            st.markdown('</div>', unsafe_allow_html=True)
             
             # Action Buttons
             col1, col2, col3 = st.columns(3)
@@ -659,121 +614,72 @@ def main():
             col1, col2 = st.columns(2)
             
             with col1:
-                st.markdown("""
-                <div class="info-card">
-                    <h4>✅ Before You Go</h4>
-                    <ul>
-                        <li>Check passport validity (6+ months)</li>
-                        <li>Research visa requirements</li>
-                        <li>Get travel insurance</li>
-                        <li>Notify your bank about travel</li>
-                        <li>Make copies of important documents</li>
-                        <li>Research local customs and laws</li>
-                    </ul>
-                </div>
-                """, unsafe_allow_html=True)
+                st.markdown("#### ✅ Before You Go")
+                st.write("- Check passport validity (6+ months)")
+                st.write("- Research visa requirements")
+                st.write("- Get travel insurance")
+                st.write("- Notify your bank about travel")
+                st.write("- Make copies of important documents")
+                st.write("- Research local customs and laws")
                 
-                st.markdown("""
-                <div class="info-card">
-                    <h4>💰 Money Matters</h4>
-                    <ul>
-                        <li>Carry mix of cash and cards</li>
-                        <li>Research currency exchange rates</li>
-                        <li>Keep emergency cash separate</li>
-                        <li>Use local ATMs for better rates</li>
-                        <li>Inform bank of travel dates</li>
-                    </ul>
-                </div>
-                """, unsafe_allow_html=True)
+                st.markdown("#### 💰 Money Matters")
+                st.write("- Carry mix of cash and cards")
+                st.write("- Research currency exchange rates")
+                st.write("- Keep emergency cash separate")
+                st.write("- Use local ATMs for better rates")
+                st.write("- Inform bank of travel dates")
             
             with col2:
-                st.markdown("""
-                <div class="info-card">
-                    <h4>🎒 Packing Essentials</h4>
-                    <ul>
-                        <li>Universal power adapter</li>
-                        <li>Portable charger</li>
-                        <li>First-aid kit</li>
-                        <li>Comfortable walking shoes</li>
-                        <li>Weather-appropriate clothing</li>
-                        <li>Reusable water bottle</li>
-                    </ul>
-                </div>
-                """, unsafe_allow_html=True)
+                st.markdown("#### 🎒 Packing Essentials")
+                st.write("- Universal power adapter")
+                st.write("- Portable charger")
+                st.write("- First-aid kit")
+                st.write("- Comfortable walking shoes")
+                st.write("- Weather-appropriate clothing")
+                st.write("- Reusable water bottle")
                 
-                st.markdown("""
-                <div class="info-card">
-                    <h4>📱 Stay Connected</h4>
-                    <ul>
-                        <li>Download offline maps</li>
-                        <li>Get local SIM or eSIM</li>
-                        <li>Save important numbers offline</li>
-                        <li>Share itinerary with family</li>
-                        <li>Download translation apps</li>
-                    </ul>
-                </div>
-                """, unsafe_allow_html=True)
+                st.markdown("#### 📱 Stay Connected")
+                st.write("- Download offline maps")
+                st.write("- Get local SIM or eSIM")
+                st.write("- Save important numbers offline")
+                st.write("- Share itinerary with family")
+                st.write("- Download translation apps")
     
     else:
         # Welcome screen with features
         col1, col2 = st.columns([1, 1])
         
         with col1:
-            st.markdown("""
-                <div class="info-card">
-                    <h2>🌟 Why Choose SafarSathi?</h2>
-                    <p>Your AI-powered travel companion that creates personalized itineraries in seconds!</p>
-                </div>
-            """, unsafe_allow_html=True)
+            st.markdown("## 🌟 Why Choose SafarSathi?")
+            st.write("Your AI-powered travel companion that creates personalized itineraries in seconds!")
             
-            st.markdown("""
-                <div class="info-card">
-                    <h3>✨ Smart Features</h3>
-                    <span class="feature-badge">AI-Powered Planning</span>
-                    <span class="feature-badge">Budget Optimization</span>
-                    <span class="feature-badge">Local Insights</span>
-                    <span class="feature-badge">Day-by-Day Breakdown</span>
-                    <span class="feature-badge">Hotel Recommendations</span>
-                    <span class="feature-badge">Food Suggestions</span>
-                    <span class="feature-badge">Safety Tips</span>
-                    <span class="feature-badge">Multiple Export Formats</span>
-                </div>
-            """, unsafe_allow_html=True)
+            st.markdown("### ✨ Smart Features")
+            st.write("✅ AI-Powered Planning")
+            st.write("✅ Budget Optimization")
+            st.write("✅ Local Insights")
+            st.write("✅ Day-by-Day Breakdown")
+            st.write("✅ Hotel Recommendations")
+            st.write("✅ Food Suggestions")
+            st.write("✅ Safety Tips")
+            st.write("✅ Multiple Export Formats")
         
         with col2:
-            st.markdown("""
-                <div class="info-card">
-                    <h3>🚀 How It Works</h3>
-                    <ol>
-                        <li><strong>Choose Your Destination</strong> - Tell us where you want to go</li>
-                        <li><strong>Set Your Preferences</strong> - Budget, dates, interests, and travel style</li>
-                        <li><strong>Get Your Itinerary</strong> - AI generates a detailed, personalized plan</li>
-                        <li><strong>Download & Go</strong> - Export in multiple formats and start your adventure!</li>
-                    </ol>
-                </div>
-            """, unsafe_allow_html=True)
+            st.markdown("### 🚀 How It Works")
+            st.write("1. **Choose Your Destination** - Tell us where you want to go")
+            st.write("2. **Set Your Preferences** - Budget, dates, interests, and travel style")
+            st.write("3. **Get Your Itinerary** - AI generates a detailed, personalized plan")
+            st.write("4. **Download & Go** - Export in multiple formats and start your adventure!")
             
-            st.markdown("""
-                <div class="info-card">
-                    <h3>🎯 Perfect For</h3>
-                    <ul>
-                        <li>🏝️ Weekend Getaways</li>
-                        <li>🌍 International Adventures</li>
-                        <li>👨‍👩‍👧‍👦 Family Vacations</li>
-                        <li>💑 Romantic Escapes</li>
-                        <li>🎒 Solo Travel</li>
-                        <li>👥 Group Trips</li>
-                    </ul>
-                </div>
-            """, unsafe_allow_html=True)
+            st.markdown("### 🎯 Perfect For")
+            st.write("🏝️ Weekend Getaways")
+            st.write("🌍 International Adventures")
+            st.write("👨‍👩‍👧‍👦 Family Vacations")
+            st.write("💑 Romantic Escapes")
+            st.write("🎒 Solo Travel")
+            st.write("👥 Group Trips")
         
         st.markdown("---")
-        st.markdown("""
-            <div style="text-align: center; padding: 2rem; color: white;">
-                <h3>👈 Start planning your dream trip by filling out the form in the sidebar!</h3>
-                <p>SafarSathi makes travel planning effortless, intelligent, and fun.</p>
-            </div>
-        """, unsafe_allow_html=True)
+        st.info("👈 Start planning your dream trip by filling out the form in the sidebar!")
 
 if __name__ == "__main__":
     main()
