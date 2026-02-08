@@ -609,13 +609,13 @@
 /* ========== EXPANDERS ========== */
 
 .streamlit-expanderHeader {
-    background: rgba(255, 255, 255, 0.06) !important;
+    background: rgba(255, 255, 255, 0.95) !important;
     border-radius: 16px !important;
     padding: 1.25rem 1.5rem !important;
     font-weight: 700 !important;
     font-size: 1.15rem !important;
     transition: all 0.3s ease !important;
-    color: #333 !important;
+    color: #1a1a1a !important;
     margin: 2rem 0 0.75rem 0 !important;
     display: flex !important;
     align-items: center !important;
@@ -624,11 +624,21 @@
     overflow: visible !important;
     min-height: 3.5rem !important;
     line-height: 1.5 !important;
+    border: 1px solid rgba(102, 126, 234, 0.2) !important;
+}
+
+/* Force text visibility in expanders */
+.streamlit-expanderHeader *,
+.streamlit-expanderHeader p,
+.streamlit-expanderHeader span,
+.streamlit-expanderHeader div {
+    color: #1a1a1a !important;
 }
 
 .streamlit-expanderHeader:hover {
-    background: rgba(255, 255, 255, 0.12) !important;
+    background: rgba(255, 255, 255, 1) !important;
     transform: translateX(5px);
+    border-color: #667eea !important;
 }
 
 .streamlit-expanderHeader svg {
@@ -647,12 +657,21 @@
 }
 
 .dark-mode .streamlit-expanderHeader {
-    background: rgba(56, 239, 125, 0.08) !important;
-    color: #e8e8f0 !important;
+    background: rgba(35, 35, 60, 0.95) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(56, 239, 125, 0.3) !important;
+}
+
+.dark-mode .streamlit-expanderHeader *,
+.dark-mode .streamlit-expanderHeader p,
+.dark-mode .streamlit-expanderHeader span,
+.dark-mode .streamlit-expanderHeader div {
+    color: #ffffff !important;
 }
 
 .dark-mode .streamlit-expanderHeader:hover {
-    background: rgba(56, 239, 125, 0.15) !important;
+    background: rgba(35, 35, 60, 1) !important;
+    border-color: #38ef7d !important;
 }
 
 /* Expanded Content */
