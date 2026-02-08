@@ -53,3 +53,6 @@ Thumbs.db
 *.tmp
 temp/
 tmp/
+
+# Jupyter Notebooks with sensitive data
+Trip_Planner_AI.ipynb
