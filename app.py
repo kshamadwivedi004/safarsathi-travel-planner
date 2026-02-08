@@ -363,6 +363,18 @@ def save_to_history(state):
     st.session_state.history.append(trip_data)
 
 def main():
+    # Apply global theme class using JavaScript
+    theme_class = "dark-mode" if st.session_state.dark_mode else "light-mode"
+    st.markdown(f"""
+        <script>
+            var stApp = window.parent.document.querySelector('.stApp');
+            if (stApp) {{
+                stApp.className = stApp.className.replace(/dark-mode|light-mode/g, '');
+                stApp.classList.add('{theme_class}');
+            }}
+        </script>
+    """, unsafe_allow_html=True)
+    
     # Dark Mode Toggle at the top
     col1, col2 = st.columns([6, 1])
     with col2:
@@ -370,12 +382,9 @@ def main():
             st.session_state.dark_mode = not st.session_state.dark_mode
             st.rerun()
     
-    # Apply theme-specific CSS
-    theme_class = "dark-mode" if st.session_state.dark_mode else "light-mode"
-    
     # Hero Header
     st.markdown(f"""
-        <div class="title-container {theme_class}">
+        <div class="title-container">
             <div class="title-text">✈️ SafarSathi</div>
             <div class="subtitle-text">Your AI-Powered Travel Companion</div>
         </div>
