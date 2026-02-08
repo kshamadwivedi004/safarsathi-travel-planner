@@ -20,17 +20,17 @@ st.set_page_config(
 )
 
 # Load external CSS
-def load_css():
-    """Load CSS from external file"""
-    css_file = os.path.join(os.path.dirname(__file__), "static", "styles.css")
-    try:
-        with open(css_file, encoding='utf-8') as f:
-            st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-    except FileNotFoundError:
-        st.warning("⚠️ CSS file not found. Using default styling.")
+# def load_css():
+#     """Load CSS from external file"""
+#     css_file = os.path.join(os.path.dirname(__file__), "static", "styles.css")
+#     try:
+#         with open(css_file, encoding='utf-8') as f:
+#             st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+#     except FileNotFoundError:
+#         st.warning("⚠️ CSS file not found. Using default styling.")
 
 # Load styles
-load_css()
+# load_css()  # Commented out - using Streamlit default styling
 
 # Define PlannerState
 class PlannerState(TypedDict):
