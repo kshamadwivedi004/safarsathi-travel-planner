@@ -1,3 +1,9 @@
+"""
+SafarSathi - AI-Powered Travel Planner
+A Streamlit application for generating personalized travel itineraries using AI
+"""
+
+# ==================== IMPORTS ====================
 import streamlit as st
 import os
 from typing import TypedDict, Annotated, List
@@ -8,7 +14,8 @@ from langchain_groq import ChatGroq
 from dotenv import load_dotenv
 import json
 
-# Load environment 
+# ==================== CONFIGURATION ====================
+# Load environment variables
 load_dotenv()
 
 # Configure Streamlit page
@@ -19,40 +26,9 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Minimal CSS enhancements that don't interfere with Streamlit defaults
-def load_minimal_css():
-    """Add minimal polish without overriding Streamlit functionality"""
-    st.markdown("""
-        <style>
-        /* Just add subtle enhancements, don't override defaults */
-        
-        /* Nicer buttons */
-        .stButton > button {
-            border-radius: 8px;
-            font-weight: 600;
-        }
-        
-        .stDownloadButton > button {
-            border-radius: 8px;
-        }
-        
-        /* Clean title */
-        h1 {
-            color: #667eea;
-        }
-        
-        /* Subtle sidebar enhancement */
-        [data-testid="stSidebar"] {
-            box-shadow: 2px 0 8px rgba(0,0,0,0.05);
-        }
-        </style>
-    """, unsafe_allow_html=True)
-
-# Load minimal enhancements
-load_minimal_css()
-
-# Define PlannerState
+# ==================== DATA STRUCTURES ====================
 class PlannerState(TypedDict):
+    """State structure for travel planning"""
     messages: Annotated[List[HumanMessage | AIMessage], "The messages in the conversation"]
     from_city: str
     city: str
@@ -70,7 +46,7 @@ class PlannerState(TypedDict):
     currency: str
     currency_symbol: str
 
-# Initialize session state
+# ==================== SESSION STATE INITIALIZATION ====================
 if 'state' not in st.session_state:
     st.session_state.state = {
         "messages": [],
@@ -94,8 +70,26 @@ if 'state' not in st.session_state:
 if 'history' not in st.session_state:
     st.session_state.history = []
 
+# ==================== STYLING ====================
+def load_streamlit_premium_css():
+    """Load custom CSS designed for Streamlit"""
+    try:
+        with open('streamlit_custom.css', 'r', encoding='utf-8') as f:
+            css = f.read()
+            st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
+    except Exception as e:
+        st.warning(f"Premium CSS not loaded: {e}")
+
+# Load premium styling
+load_streamlit_premium_css()
+
+# ==================== AI MODEL INITIALIZATION ====================
 @st.cache_resource
 def get_llm():
+    """
+    Initialize and return the ChatGroq LLM
+    Returns None if API key is not configured
+    """
     try:
         # Try to get API key from Streamlit secrets first (for cloud deployment)
         # Then fallback to environment variable (for local development)
@@ -133,7 +127,7 @@ def get_llm():
         st.info("💡 Make sure your GROQ API key is valid and has proper permissions.")
         return None
 
-# Enhanced itinerary prompt with real-world details
+# ==================== AI PROMPT TEMPLATE ====================
 itinerary_prompt = ChatPromptTemplate.from_messages([
     ("system", """You are SafarSathi, an expert AI travel planner with extensive real-world knowledge of global destinations.
     Create a comprehensive, detailed travel itinerary from {from_city} to {city} with the following requirements:
@@ -243,68 +237,17 @@ itinerary_prompt = ChatPromptTemplate.from_messages([
     ("human", "Create my dream itinerary from {from_city} to {city} with real, specific recommendations including flights, trains, hotels, and return journey!"),
 ])
 
-# Sample itinerary template for demonstration
-SAMPLE_ITINERARY_TEMPLATE = """
-# 🌏 Sample Travel Itinerary
-
-## ⚠️ API Configuration Required
-
-To generate personalized itineraries for **{city}**, please configure your GROQ API key.
-
-**Quick Setup (5 minutes):**
-1. Visit: https://console.groq.com/keys
-2. Create a free account and generate an API key
-3. Add your key to the `.env` file
-4. Restart the application
-
----
-
-## 📋 What You'll Get After Setup:
-
-### ✨ Your Personalized Itinerary Will Include:
-
-**🗓️ Day-by-Day Planning**
-- Specific attractions with real names and locations
-- Optimal timing for each activity
-- Estimated costs for entries and activities
-
-**🏨 Accommodation Recommendations**
-- Real hotel/hostel names and locations
-- Price ranges matching your ${budget_per_person:.0f}/person budget
-- Best areas to stay in {city}
-
-**🍽️ Food & Dining**
-- Local restaurants and street food spots
-- Must-try dishes and cuisines
-- Budget-friendly to luxury options
-
-**🚗 Transportation Guide**
-- Airport transfers
-- Local transport options (metro, bus, taxi)
-- Day trip recommendations
-
-**💰 Complete Budget Breakdown**
-- Accommodation costs
-- Daily food expenses
-- Activity fees
-- Transportation
-- Emergency fund suggestions
-
-**🎯 Personalized for Your Interests:**
-{interests}
-
-**👥 Optimized for {num_travelers} Travelers**
-
----
-
-## 🚀 Get Started Now!
-
-See [`API_KEY_SETUP.md`](API_KEY_SETUP.md) for detailed setup instructions.
-
-Once configured, click **"Generate My Itinerary"** again to get your complete, personalized travel plan! ✈️
-"""
-
+# ==================== CORE FUNCTIONS ====================
 def create_itinerary(state: PlannerState) -> str:
+    """
+    Generate a detailed travel itinerary using AI
+    
+    Args:
+        state: PlannerState dictionary containing trip details
+        
+    Returns:
+        str: Generated itinerary or error message
+    """
     try:
         llm = get_llm()
         if llm is None:
@@ -324,6 +267,7 @@ The GROQ API is free and provides fast, high-quality AI responses for travel pla
         end = datetime.strptime(state["end_date"], "%Y-%m-%d")
         num_days = (end - start).days + 1
             
+        # Generate itinerary using AI
         response = llm.invoke(itinerary_prompt.format_messages(
             from_city=state["from_city"],
             city=state["city"],
@@ -340,6 +284,7 @@ The GROQ API is free and provides fast, high-quality AI responses for travel pla
             currency_symbol=state.get("currency_symbol", "$")
         ))
         return response.content
+        
     except Exception as e:
         error_msg = str(e).lower()
         if "api" in error_msg and ("key" in error_msg or "401" in error_msg or "invalid" in error_msg):
@@ -367,7 +312,7 @@ The GROQ API is free and provides fast, high-quality AI responses for travel pla
 - If the problem persists, check https://status.groq.com/"""
 
 def save_to_history(state):
-    """Save trip to history"""
+    """Save trip details to history"""
     trip_data = {
         "from_city": state.get("from_city", "N/A"),
         "city": state["city"],
@@ -378,17 +323,41 @@ def save_to_history(state):
     }
     st.session_state.history.append(trip_data)
 
+# ==================== MAIN APPLICATION ====================
 def main():
-    # Hero Header
-    st.title("✈️ SafarSathi")
-    st.subheader("Your AI-Powered Travel Companion")
+    """Main application function"""
+    
+    # ========== HEADER ==========
+    st.markdown("""
+        <div style='text-align: center; padding: 2rem; background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); border-radius: 20px; margin-bottom: 2rem; backdrop-filter: blur(10px);'>
+            <div style='display: flex; align-items: center; justify-content: center; gap: 20px;'>
+                <div style='font-size: 4rem; animation: float 3s ease-in-out infinite;'>✈️</div>
+                <h1 style='color: white; font-size: 3.5rem; margin: 0; font-weight: 900; letter-spacing: -2px;'>SafarSathi</h1>
+            </div>
+            <div style='overflow: hidden; white-space: nowrap; margin-top: 1rem;'>
+                <p style='color: rgba(255,255,255,0.9); font-size: 1.3rem; font-weight: 400; display: inline-block; animation: scrollRight 15s linear infinite;'>
+                    🌍 Plan Your Perfect Journey • ✨ AI-Powered Recommendations • 🗺️ 195+ Destinations • 💰 Budget Friendly • 🏨 Hotel Recommendations • 🍽️ Food Suggestions • 📅 Day-by-Day Itineraries
+                </p>
+            </div>
+        </div>
+        <style>
+            @keyframes float {
+                0%, 100% { transform: translateY(0px); }
+                50% { transform: translateY(-15px); }
+            }
+            @keyframes scrollRight {
+                0% { transform: translateX(100%); }
+                100% { transform: translateX(-100%); }
+            }
+        </style>
+    """, unsafe_allow_html=True)
     st.markdown("---")
     
-    # Sidebar for input
+    # ========== SIDEBAR - INPUT FORM ==========
     with st.sidebar:
         st.markdown("### 🎯 Plan Your Perfect Trip")
         
-        # Trip Details Section
+        # Journey Details
         with st.expander("🗺️ Journey Details", expanded=True):
             from_city = st.text_input("🏠 From (Origin City)", placeholder="e.g., Mumbai, Delhi, New York", help="Enter your starting city")
             city = st.text_input("📍 To (Destination City)", placeholder="e.g., Paris, Tokyo, Dubai", help="Enter your destination city")
@@ -468,6 +437,7 @@ def main():
         # Generate Button
         generate_btn = st.button("🚀 Generate My Itinerary", use_container_width=True)
         
+        # Validation and Generation
         if generate_btn:
             if not from_city:
                 st.error("⚠️ Please enter your origin city!")
@@ -519,13 +489,14 @@ def main():
             currency_symbol_display = st.session_state.state.get("currency_symbol", "$")
             st.metric("Budget", f"{currency_symbol_display}{st.session_state.state['total_budget']:,.0f}")
     
-    # Main content area
+    # ========== MAIN CONTENT AREA ==========
     if st.session_state.state["itinerary"]:
-        # Tabs for better organization
+        # Create tabs for different sections
         tab1, tab2, tab3 = st.tabs(["📋 Your Itinerary", "🗂️ Trip History", "💡 Travel Tips"])
         
+        # Tab 1: Generated Itinerary
         with tab1:
-            # Key Metrics
+            # Display metrics
             col1, col2, col3, col4 = st.columns(4)
             
             start = datetime.strptime(st.session_state.state["start_date"], "%Y-%m-%d")
@@ -535,23 +506,20 @@ def main():
             
             with col1:
                 st.metric("Journey", f"{st.session_state.state.get('from_city', 'N/A')} → {st.session_state.state['city']}")
-            
             with col2:
                 st.metric("Days", f"{num_days}")
-            
             with col3:
                 st.metric("Travelers", f"{st.session_state.state['num_travelers']}")
-            
             with col4:
                 currency_symbol_display = st.session_state.state.get("currency_symbol", "$")
                 st.metric("Per Day/Person", f"{currency_symbol_display}{daily_budget:.0f}")
             
             st.markdown("---")
             
-            # Itinerary Display
+            # Display itinerary
             st.markdown(st.session_state.state["itinerary"])
             
-            # Action Buttons
+            # Download options
             col1, col2, col3 = st.columns(3)
             
             with col1:
@@ -564,7 +532,7 @@ def main():
                 )
             
             with col2:
-                # Create markdown version
+                # Markdown version
                 md_content = f"""# {st.session_state.state.get('from_city', 'N/A')} → {st.session_state.state['city']} Trip Itinerary
 
 **Generated by SafarSathi**
@@ -589,7 +557,7 @@ def main():
                 )
             
             with col3:
-                # Create JSON export
+                # JSON export
                 json_data = {
                     "from_city": st.session_state.state.get('from_city', 'N/A'),
                     "destination": st.session_state.state['city'],
@@ -609,6 +577,7 @@ def main():
                     use_container_width=True
                 )
         
+        # Tab 2: Trip History
         with tab2:
             st.markdown("### 🗂️ Your Trip History")
             
@@ -627,6 +596,7 @@ def main():
             else:
                 st.info("📝 No trip history yet. Start planning your first trip!")
         
+        # Tab 3: Travel Tips
         with tab3:
             st.markdown("### 💡 Essential Travel Tips")
             
@@ -665,7 +635,7 @@ def main():
                 st.write("- Download translation apps")
     
     else:
-        # Welcome screen with features
+        # Welcome screen
         col1, col2 = st.columns([1, 1])
         
         with col1:
@@ -700,5 +670,6 @@ def main():
         st.markdown("---")
         st.info("👈 Start planning your dream trip by filling out the form in the sidebar!")
 
+# ==================== ENTRY POINT ====================
 if __name__ == "__main__":
     main()

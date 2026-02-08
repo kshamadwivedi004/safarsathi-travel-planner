@@ -7,5 +7,15 @@ font = "sans serif"
 
 [server]
 headless = true
-enableCORS = false
 port = 8501
+enableXsrfProtection = false
+
+[browser]
+gatherUsageStats = false
+
+[client]
+showErrorDetails = false
+toolbarMode = "minimal"
+
+[runner]
+fastReruns = true
