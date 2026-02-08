@@ -75,6 +75,9 @@ if 'state' not in st.session_state:
 if 'history' not in st.session_state:
     st.session_state.history = []
 
+if 'dark_mode' not in st.session_state:
+    st.session_state.dark_mode = False
+
 @st.cache_resource
 def get_llm():
     try:
@@ -360,9 +363,19 @@ def save_to_history(state):
     st.session_state.history.append(trip_data)
 
 def main():
+    # Dark Mode Toggle at the top
+    col1, col2 = st.columns([6, 1])
+    with col2:
+        if st.button("🌙" if not st.session_state.dark_mode else "☀️", help="Toggle Dark/Light Mode"):
+            st.session_state.dark_mode = not st.session_state.dark_mode
+            st.rerun()
+    
+    # Apply theme-specific CSS
+    theme_class = "dark-mode" if st.session_state.dark_mode else "light-mode"
+    
     # Hero Header
-    st.markdown("""
-        <div class="title-container">
+    st.markdown(f"""
+        <div class="title-container {theme_class}">
             <div class="title-text">✈️ SafarSathi</div>
             <div class="subtitle-text">Your AI-Powered Travel Companion</div>
         </div>
