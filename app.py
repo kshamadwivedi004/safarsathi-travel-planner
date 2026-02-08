@@ -19,7 +19,37 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# No custom CSS - using pure Streamlit defaults
+# Minimal CSS enhancements that don't interfere with Streamlit defaults
+def load_minimal_css():
+    """Add minimal polish without overriding Streamlit functionality"""
+    st.markdown("""
+        <style>
+        /* Just add subtle enhancements, don't override defaults */
+        
+        /* Nicer buttons */
+        .stButton > button {
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        
+        .stDownloadButton > button {
+            border-radius: 8px;
+        }
+        
+        /* Clean title */
+        h1 {
+            color: #667eea;
+        }
+        
+        /* Subtle sidebar enhancement */
+        [data-testid="stSidebar"] {
+            box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+# Load minimal enhancements
+load_minimal_css()
 
 # Define PlannerState
 class PlannerState(TypedDict):
