@@ -385,15 +385,66 @@
     padding: 2rem 1.5rem !important;
 }
 
+/* Sidebar spacing to prevent overlap */
+[data-testid="stSidebar"] .element-container {
+    margin: 1.5rem 0 !important;
+    clear: both;
+}
+
+[data-testid="stSidebar"] .stMarkdown {
+    margin: 1rem 0 !important;
+    clear: both;
+    display: block;
+}
+
 [data-testid="stSidebar"] .stMarkdown h3 {
     color: #667eea;
     font-size: 1.6rem;
     font-weight: 700;
-    margin: 1rem 0 1.5rem 0;
+    margin: 2rem 0 1.5rem 0 !important;
+    clear: both;
+    display: block;
 }
 
 .dark-mode [data-testid="stSidebar"] .stMarkdown h3 {
     color: #38ef7d;
+}
+
+/* Sidebar input spacing */
+[data-testid="stSidebar"] .stTextInput,
+[data-testid="stSidebar"] .stNumberInput,
+[data-testid="stSidebar"] .stSelectbox,
+[data-testid="stSidebar"] .stMultiSelect,
+[data-testid="stSidebar"] .stDateInput {
+    margin: 1.25rem 0 !important;
+    clear: both;
+}
+
+/* Sidebar button spacing */
+[data-testid="stSidebar"] .stButton {
+    margin: 2rem 0 !important;
+    clear: both;
+}
+
+/* Sidebar expander spacing */
+[data-testid="stSidebar"] .streamlit-expanderHeader {
+    margin: 1.5rem 0 0.5rem 0 !important;
+}
+
+[data-testid="stSidebar"] .streamlit-expanderContent {
+    padding: 1.5rem 0.5rem !important;
+}
+
+/* Sidebar column spacing */
+[data-testid="stSidebar"] [data-testid="column"] {
+    padding: 0 0.5rem !important;
+}
+
+/* Sidebar labels */
+[data-testid="stSidebar"] label {
+    display: block !important;
+    margin: 0.75rem 0 0.5rem 0 !important;
+    clear: both;
 }
 
 /* ========== INPUT FIELDS ========== */
